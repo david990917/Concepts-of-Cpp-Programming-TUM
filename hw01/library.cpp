@@ -4,5 +4,5 @@
  */
 int library_function()
 {
-    return 42;
+    return 1337;
 }
