@@ -8,6 +8,7 @@
  */
 
 #include "library.h"
+
 int main()
 {
     int library_number = library_function();
