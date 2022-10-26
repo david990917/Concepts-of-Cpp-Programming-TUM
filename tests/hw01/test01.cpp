@@ -13,7 +13,7 @@ int main()
 {
     int library_number = library_function();
 
-    bool ok = library_number == 1337;
+    bool ok = library_number == 42;
 
     // when a program exits with 0, this means "no error"
     return not ok;
