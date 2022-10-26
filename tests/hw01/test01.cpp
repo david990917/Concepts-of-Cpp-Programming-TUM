@@ -9,7 +9,8 @@
 
 #include "library.h"
 
-int main() {
+int main()
+{
     int library_number = library_function();
 
     bool ok = library_number == 42;
