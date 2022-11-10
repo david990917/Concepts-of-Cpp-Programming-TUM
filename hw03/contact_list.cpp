@@ -7,6 +7,7 @@
 #include <string>
 
 // TODO create implementation here!
+// TODO could be updated by vector<pair>
 namespace contact_list
 {
     /**
