@@ -54,10 +54,12 @@ namespace contact_list
      */
     std::string to_string(const storage &contacts)
     {
+        std::string result = "";
         for (unsigned i = 0; i < contacts.names.size(); i++)
         {
-            std::cout << contacts.names[i] << " - " << contacts.numbers[i] << "\n";
+            result += (contacts.names[i] + " - " + std::to_string(contacts.numbers[i]) + "\n");
         }
+        return result;
     }
 
     /**
@@ -83,18 +85,22 @@ namespace contact_list
      */
     void sort(storage &contacts)
     {
+        std::vector<std::string> tmp_names = contacts.names;
         std::sort(contacts.names.begin(), contacts.names.end());
         std::vector<number_t> tmp_numbers;
         for (unsigned i = 0; i < contacts.names.size(); i++)
         {
             for (unsigned j = 0; j < contacts.names.size(); j++)
             {
-                if (contacts.names[j] == contacts.names[i])
+                if (tmp_names[j] == contacts.names[i])
                 {
                     tmp_numbers.push_back(contacts.numbers[j]);
+                    std::cout << i << " " << j << " " << contacts.names[i] << " " << contacts.numbers[j] << '\n';
+                    break;
                 }
             }
         }
+
         contacts.numbers = tmp_numbers;
     }
 

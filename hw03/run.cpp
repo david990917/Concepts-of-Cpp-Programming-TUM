@@ -10,7 +10,10 @@ namespace contact_list
     {
         storage abook;
         add(abook, "Best Friend", 421234);
+        std::cout << to_string(abook);
         add(abook, "False Friend", 10032331);
+        add(abook, "False Friend2", 10032332);
+        add(abook, "False Friend3", 10032333);
         std::cout << to_string(abook);
     }
 
