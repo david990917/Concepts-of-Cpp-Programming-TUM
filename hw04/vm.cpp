@@ -39,11 +39,17 @@ vm_state create_vm(bool debug)
     });
 
     register_instruction(state, "ADD", [](vm_state& vmstate, const item_t /*arg*/) {
-        item_t a = vmstate.stack.top();
-        vmstate.stack.pop();
-        item_t b = vmstate.stack.top();
-        vmstate.stack.pop();
-        vmstate.stack.push(a + b);
+        try {
+            item_t a = vmstate.stack.top();
+            vmstate.stack.pop();
+            item_t b = vmstate.stack.top();
+            vmstate.stack.pop();
+            vmstate.stack.push(a + b);
+        }
+        catch (const std::logic_error& e) {
+            throw vm_stackfail("Empty stack");
+        }
+
         return true;
     });
 
