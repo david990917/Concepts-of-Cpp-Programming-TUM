@@ -84,8 +84,8 @@ struct vm_state
     bool debug = false;
 
     // if you need to store more vm state, add it here!
-    std::string output   = "";
-    int         codeSize = 0;
+    std::string   output   = "";
+    unsigned long codesize = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

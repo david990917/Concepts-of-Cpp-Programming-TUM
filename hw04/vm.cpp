@@ -115,9 +115,9 @@ vm_state create_vm(bool debug)
     });
 
     register_instruction(state, "JMP", [](vm_state& vmstate, const item_t arg) {
-        if (arg < 0 || arg >= vmstate.codeSize) {
+        if (arg < 0 || arg >= vmstate.codesize) {
             std::cout << arg << " "
-                      << "codesize: " << vmstate.codeSize << std::endl;
+                      << "codesize: " << vmstate.codesize << std::endl;
             throw vm_segfault("vm_segfault");
         }
         vmstate.pc = arg;
@@ -129,17 +129,17 @@ vm_state create_vm(bool debug)
             throw vm_stackfail("vm_stackfail");
         }
 
-        if (arg < 0 || arg >= vmstate.codeSize) {
+        if (arg < 0 || arg >= vmstate.codesize) {
             std::cout << arg << " "
-                      << "codesize: " << vmstate.codeSize << std::endl;
+                      << "codesize: " << vmstate.codesize << std::endl;
             throw vm_segfault("vm_segfault");
         }
         item_t a = vmstate.stack.top();
         vmstate.stack.pop();
         if (a == 0) {
             vmstate.pc = arg;
-            return true;
         }
+        return true;
     });
 
     register_instruction(state, "WRITE", [](vm_state& vmstate, const item_t /*arg*/) {
@@ -229,7 +229,7 @@ std::tuple<item_t, std::string> run(vm_state& vm, const code_t& code)
     }
 
     // execution loop for the machine
-    vm.codeSize = code.size();
+    vm.codesize = code.size();
     while (true) {
 
         auto& [op_id, arg] = code[vm.pc];
