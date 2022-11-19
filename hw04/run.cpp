@@ -18,14 +18,7 @@ void test_vm()
     //                        "EXIT\n");
 
     // std::string program = {};
-    std::string program = {"LOAD_CONST 701\n"
-                           "LOAD_CONST 20\n"
-                           "EQ\n"
-                           "JMPZ 6\n"
-                           "LOAD_CONST 8001\n"
-                           "JMP 7\n"
-                           "LOAD_CONST 6231\n"
-                           "EXIT\n"};
+    std::string program = {"ADD\n"};
     std::cout << "initializing vm..." << std::endl;
     // create it in debug-mode!
     vm_state state = create_vm(true);

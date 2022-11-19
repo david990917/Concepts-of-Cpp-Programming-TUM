@@ -45,6 +45,7 @@ vm_state create_vm(bool debug)
         if (vmstate.stack.size() < 2) {
             throw vm_stackfail("vm_stackfail");
         }
+
         item_t a = vmstate.stack.top();
         vmstate.stack.pop();
         item_t b = vmstate.stack.top();
