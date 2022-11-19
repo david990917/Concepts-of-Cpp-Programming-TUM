@@ -11,12 +11,21 @@ namespace vm {
  */
 void test_vm()
 {
-    std::string program = ("LOAD_CONST 432\n"
-                           "LOAD_CONST 905\n"
-                           "ADD\n"
-                           "PRINT\n"
-                           "EXIT\n");
+    // std::string program = ("LOAD_CONST 432\n"
+    //                        "LOAD_CONST 905\n"
+    //                        "ADD\n"
+    //                        "PRINT\n"
+    //                        "EXIT\n");
 
+    // std::string program = {};
+    std::string program = {"JMP 5\n"
+                           "LOAD_CONST 123\n"
+                           "LOAD_CONST 912\n"
+                           "JMP 7\n"
+                           "LOAD_CONST 852\n"
+                           "JMP 2\n"
+                           "LOAD_CONST 601\n"
+                           "EXIT\n"};
     std::cout << "initializing vm..." << std::endl;
     // create it in debug-mode!
     vm_state state = create_vm(true);
