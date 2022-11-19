@@ -95,7 +95,8 @@ vm_state create_vm(bool debug)
 
     register_instruction(state, "JMP", [](vm_state& vmstate, const item_t arg) {
         if (arg < 0 || arg >= vmstate.codeSize) {
-            std::cout << arg << " " << vmstate.codeSize << std::endl;
+            std::cout << arg << " "
+                      << "codesize: " << vmstate.codeSize << std::endl;
             throw vm_segfault("vm_segfault");
         }
         vmstate.pc = arg;
@@ -103,8 +104,9 @@ vm_state create_vm(bool debug)
     });
 
     register_instruction(state, "JMPZ", [](vm_state& vmstate, const item_t arg) {
-        if (arg < 0 || arg > vmstate.codeSize) {
-            std::cout << arg << " " << vmstate.codeSize << std::endl;
+        if (arg < 0 || arg >= vmstate.codeSize) {
+            std::cout << arg << " "
+                      << "codesize: " << vmstate.codeSize << std::endl;
             throw vm_segfault("vm_segfault");
         }
         item_t a = vmstate.stack.top();
