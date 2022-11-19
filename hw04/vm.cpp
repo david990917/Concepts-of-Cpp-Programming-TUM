@@ -90,7 +90,7 @@ vm_state create_vm(bool debug)
     });
 
     register_instruction(state, "JMP", [](vm_state& vmstate, const item_t arg) {
-        if (arg < 0) {
+        if (arg < 0 || arg >= vmstate.codeSize) {
             throw vm_segfault("vm_segfault");
         }
         vmstate.pc = arg;
@@ -98,12 +98,12 @@ vm_state create_vm(bool debug)
     });
 
     register_instruction(state, "JMPZ", [](vm_state& vmstate, const item_t arg) {
-        if (arg < 0) {
+        if (arg < 0 || arg > vmstate.codeSize) {
             throw vm_segfault("vm_segfault");
         }
         item_t a = vmstate.stack.top();
+        vmstate.stack.pop();
         if (a == 0) {
-            vmstate.stack.pop();
             vmstate.pc = arg;
             return true;
         }
@@ -190,6 +190,7 @@ std::tuple<item_t, std::string> run(vm_state& vm, const code_t& code)
     }
 
     // execution loop for the machine
+    vm.codeSize = code.size();
     while (true) {
 
         auto& [op_id, arg] = code[vm.pc];
