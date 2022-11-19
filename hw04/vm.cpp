@@ -26,8 +26,12 @@ vm_state create_vm(bool debug)
         return true;
     });
 
-    register_instruction(
-        state, "EXIT", [](vm_state& vmstate, const item_t /*arg*/) { return false; });
+    register_instruction(state, "EXIT", [](vm_state& vmstate, const item_t /*arg*/) {
+        if (vmstate.stack.size() == 0) {
+            throw vm_stackfail("Empty stack");
+        }
+        return false;
+    });
 
     register_instruction(state, "POP", [](vm_state& vmstate, const item_t /*arg*/) {
         vmstate.stack.pop();
