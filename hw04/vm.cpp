@@ -43,7 +43,6 @@ vm_state create_vm(bool debug)
         return true;
     });
 
-    // TODO dived by zero
     register_instruction(state, "DIV", [](vm_state& vmstate, const item_t /*arg*/) {
         if (vmstate.stack.top() == 0) {
             throw div_by_zero{"div_by_zero"};
@@ -55,6 +54,7 @@ vm_state create_vm(bool debug)
         vmstate.stack.push(b / a);
         return true;
     });
+
     register_instruction(state, "EQ", [](vm_state& vmstate, const item_t /*arg*/) {
         item_t a = vmstate.stack.top();
         vmstate.stack.pop();
@@ -68,6 +68,7 @@ vm_state create_vm(bool debug)
         }
         return true;
     });
+
     register_instruction(state, "NEQ", [](vm_state& vmstate, const item_t /*arg*/) {
         item_t a = vmstate.stack.top();
         vmstate.stack.pop();
@@ -81,16 +82,27 @@ vm_state create_vm(bool debug)
         }
         return true;
     });
+
     register_instruction(state, "DUP", [](vm_state& vmstate, const item_t /*arg*/) {
         item_t a = vmstate.stack.top();
         vmstate.stack.push(a);
         return true;
     });
+
     register_instruction(state, "JMP", [](vm_state& vmstate, const item_t arg) {
+        unsigned long size = vmstate.stack.size();
+        if (arg < 0 || arg > size) {
+            throw vm_segfault("vm_segfault");
+        }
         vmstate.pc = arg;
         return true;
     });
+
     register_instruction(state, "JMPZ", [](vm_state& vmstate, const item_t arg) {
+        unsigned long size = vmstate.stack.size();
+        if (arg < 0 || arg > size) {
+            throw vm_segfault("vm_segfault");
+        }
         item_t a = vmstate.stack.top();
         if (a == 0) {
             vmstate.stack.pop();
@@ -98,11 +110,13 @@ vm_state create_vm(bool debug)
             return true;
         }
     });
+
     register_instruction(state, "WRITE", [](vm_state& vmstate, const item_t /*arg*/) {
         item_t a = vmstate.stack.top();
         vmstate.output += std::to_string(a);
         return true;
     });
+
     register_instruction(state, "WRITE_CHAR", [](vm_state& vmstate, const item_t /*arg*/) {
         item_t a = vmstate.stack.top();
         vmstate.output += char(a);
@@ -192,10 +206,6 @@ std::tuple<item_t, std::string> run(vm_state& vm, const code_t& code)
         vm.pc += 1;
 
         // TODO execute instruction and stop if the action returns false.
-
-        // TODO执行的问题
-
-
         if (not vm.instruction_actions[op_id](vm, arg)) {
             return {vm.stack.top(), vm.output};
         }
