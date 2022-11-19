@@ -34,29 +34,34 @@ vm_state create_vm(bool debug)
     });
 
     register_instruction(state, "POP", [](vm_state& vmstate, const item_t /*arg*/) {
+        if (vmstate.stack.size() == 0) {
+            throw vm_stackfail("vm_stackfail");
+        }
         vmstate.stack.pop();
         return true;
     });
 
     register_instruction(state, "ADD", [](vm_state& vmstate, const item_t /*arg*/) {
-        try {
-            item_t a = vmstate.stack.top();
-            vmstate.stack.pop();
-            item_t b = vmstate.stack.top();
-            vmstate.stack.pop();
-            vmstate.stack.push(a + b);
+        if (vmstate.stack.size() < 2) {
+            throw vm_stackfail("vm_stackfail");
         }
-        catch (const std::logic_error& e) {
-            throw vm_stackfail("Empty stack");
-        }
-
+        item_t a = vmstate.stack.top();
+        vmstate.stack.pop();
+        item_t b = vmstate.stack.top();
+        vmstate.stack.pop();
+        vmstate.stack.push(a + b);
         return true;
     });
 
     register_instruction(state, "DIV", [](vm_state& vmstate, const item_t /*arg*/) {
+        if (vmstate.stack.size() < 2) {
+            throw vm_stackfail("vm_stackfail");
+        }
+
         if (vmstate.stack.top() == 0) {
             throw div_by_zero{"div_by_zero"};
         }
+
         item_t a = vmstate.stack.top();
         vmstate.stack.pop();
         item_t b = vmstate.stack.top();
@@ -66,6 +71,9 @@ vm_state create_vm(bool debug)
     });
 
     register_instruction(state, "EQ", [](vm_state& vmstate, const item_t /*arg*/) {
+        if (vmstate.stack.size() < 2) {
+            throw vm_stackfail("vm_stackfail");
+        }
         item_t a = vmstate.stack.top();
         vmstate.stack.pop();
         item_t b = vmstate.stack.top();
@@ -80,6 +88,9 @@ vm_state create_vm(bool debug)
     });
 
     register_instruction(state, "NEQ", [](vm_state& vmstate, const item_t /*arg*/) {
+        if (vmstate.stack.size() < 2) {
+            throw vm_stackfail("vm_stackfail");
+        }
         item_t a = vmstate.stack.top();
         vmstate.stack.pop();
         item_t b = vmstate.stack.top();
@@ -94,6 +105,9 @@ vm_state create_vm(bool debug)
     });
 
     register_instruction(state, "DUP", [](vm_state& vmstate, const item_t /*arg*/) {
+        if (vmstate.stack.size() == 0) {
+            throw vm_stackfail("vm_stackfail");
+        }
         item_t a = vmstate.stack.top();
         vmstate.stack.push(a);
         return true;
@@ -124,12 +138,18 @@ vm_state create_vm(bool debug)
     });
 
     register_instruction(state, "WRITE", [](vm_state& vmstate, const item_t /*arg*/) {
+        if (vmstate.stack.size() == 0) {
+            throw vm_stackfail("vm_stackfail");
+        }
         item_t a = vmstate.stack.top();
         vmstate.output += std::to_string(a);
         return true;
     });
 
     register_instruction(state, "WRITE_CHAR", [](vm_state& vmstate, const item_t /*arg*/) {
+        if (vmstate.stack.size() == 0) {
+            throw vm_stackfail("vm_stackfail");
+        }
         item_t a = vmstate.stack.top();
         vmstate.output += char(a);
         return true;
