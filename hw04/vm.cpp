@@ -10,6 +10,7 @@ namespace vm {
 vm_state create_vm(bool debug)
 {
     vm_state state;
+    state.next_op_id = 0;
 
     // enable vm debugging
     state.debug = debug;
@@ -20,13 +21,14 @@ vm_state create_vm(bool debug)
     });
 
     // TODO create instructions
-    register_instruction(state, "LOAD CONST", [](vm_state& vmstate, const item_t arg) {
+    register_instruction(state, "LOAD_CONST", [](vm_state& vmstate, const item_t arg) {
         vmstate.stack.push(arg);
         return true;
     });
 
     register_instruction(
         state, "EXIT", [](vm_state& vmstate, const item_t /*arg*/) { return false; });
+
     register_instruction(state, "POP", [](vm_state& vmstate, const item_t /*arg*/) {
         vmstate.stack.pop();
         return true;
@@ -44,7 +46,7 @@ vm_state create_vm(bool debug)
     // TODO dived by zero
     register_instruction(state, "DIV", [](vm_state& vmstate, const item_t /*arg*/) {
         if (vmstate.stack.top() == 0) {
-            throw std::logic_error(vm::div_by_zero);
+            throw div_by_zero{"div_by_zero"};
         }
         item_t a = vmstate.stack.top();
         vmstate.stack.pop();
@@ -98,7 +100,7 @@ vm_state create_vm(bool debug)
     });
     register_instruction(state, "WRITE", [](vm_state& vmstate, const item_t /*arg*/) {
         item_t a = vmstate.stack.top();
-        vmstate.output += a;
+        vmstate.output += std::to_string(a);
         return true;
     });
     register_instruction(state, "WRITE_CHAR", [](vm_state& vmstate, const item_t /*arg*/) {
@@ -115,6 +117,10 @@ void register_instruction(vm_state& state, std::string_view name, const op_actio
     size_t op_id = state.next_op_id;
 
     // TODO make instruction available to vm
+    state.instruction_actions.insert({op_id, action});
+    state.instruction_ids.insert({std::string(name), op_id});
+    state.instruction_names.insert({op_id, std::string(name)});
+    state.next_op_id++;
 }
 
 code_t assemble(const vm_state& state, std::string_view input_program)
@@ -186,13 +192,16 @@ std::tuple<item_t, std::string> run(vm_state& vm, const code_t& code)
         vm.pc += 1;
 
         // TODO execute instruction and stop if the action returns false.
-        if (!vm.instruction_actions[op_id](arg)) {
-            break;
+
+        // TODO执行的问题
+
+
+        if (not vm.instruction_actions[op_id](vm, arg)) {
+            return {vm.stack.top(), vm.output};
         }
     }
 
-    return {};        // TODO 完善
-    return {0, ""};   // TODO: return tuple(exit value, output text)
+    return {vm.stack.top(), vm.output};   // TODO: return tuple(exit value, output text)
 }
 
 }   // namespace vm

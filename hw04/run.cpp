@@ -9,13 +9,13 @@ namespace vm {
 /**
  * simple test code for invoking the VM.
  */
-void test_vm() {
-    std::string program = (
-        "LOAD_CONST 432\n"
-        "LOAD_CONST 905\n"
-        "ADD\n"
-        "PRINT\n"
-        "EXIT\n");
+void test_vm()
+{
+    std::string program = ("LOAD_CONST 432\n"
+                           "LOAD_CONST 905\n"
+                           "ADD\n"
+                           "PRINT\n"
+                           "EXIT\n");
 
     std::cout << "initializing vm..." << std::endl;
     // create it in debug-mode!
@@ -33,10 +33,9 @@ void test_vm() {
             std::cout << return_text << std::endl;
         }
     }
-    catch (vm_stackfail &err) {
+    catch (vm_stackfail& err) {
         std::cout << "vm stack access failes! " << err.what() << std::endl;
-        std::cout << "stack status (newest at top, size="
-                  << state.stack.size()
+        std::cout << "stack status (newest at top, size=" << state.stack.size()
                   << "):" << std::endl;
 
         while (not state.stack.empty()) {
@@ -44,21 +43,20 @@ void test_vm() {
             state.stack.pop();
         }
     }
-    catch (vm_segfault &err) {
+    catch (vm_segfault& err) {
         std::cout << "vm segfaulted! " << err.what() << std::endl;
-        std::cout << "tried to access invalid program memory at pc="
-                  << state.pc << std::endl;
-
+        std::cout << "tried to access invalid program memory at pc=" << state.pc << std::endl;
     }
-    catch (div_by_zero &err) {
+    catch (div_by_zero& err) {
         std::cout << "vm divided by zero! " << err.what() << std::endl;
     }
 }
 
-} // namespace vm
+}   // namespace vm
 
 
-int main() {
+int main()
+{
     vm::test_vm();
     return 0;
 }
