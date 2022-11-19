@@ -104,8 +104,8 @@ vm_state create_vm(bool debug)
             throw vm_segfault("vm_segfault");
         }
         item_t a = vmstate.stack.top();
+        vmstate.stack.pop();
         if (a == 0) {
-            vmstate.stack.pop();
             vmstate.pc = arg;
             return true;
         }
