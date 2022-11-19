@@ -42,7 +42,7 @@ vm_state create_vm(bool debug)
     });
 
     register_instruction(state, "ADD", [](vm_state& vmstate, const item_t /*arg*/) {
-        if (vmstate.stack.size() == 0) {
+        if (vmstate.stack.size() < 0) {
             throw vm_stackfail("vm_stackfail");
         }
 
@@ -115,6 +115,10 @@ vm_state create_vm(bool debug)
     });
 
     register_instruction(state, "JMP", [](vm_state& vmstate, const item_t arg) {
+        if (vmstate.stack.size() == 0) {
+            throw vm_stackfail("vm_stackfail");
+        }
+
         if (arg < 0 || arg >= vmstate.codeSize) {
             std::cout << arg << " "
                       << "codesize: " << vmstate.codeSize << std::endl;
