@@ -63,8 +63,8 @@ struct TransitionFromFromClauseVisitor
     State operator()(token::Select) const { return state::Invalid{}; }
     State operator()(token::From) const { return state::Invalid{}; }
     State operator()(token::Comma) const { return state::Invalid{}; }
-    State operator()(token::Asterisks) const { return state::Valid{}; }
-    State operator()(token::Semicolon) const { return state::Valid{}; }
+    State operator()(token::Asterisks) const { return state::Invalid{}; }
+    State operator()(token::Semicolon) const { return state::Invalid{}; }
     State operator()(token::Identifier) const { return state::TableName{}; }
 };
 struct TransitionFromTableNameVisitor
@@ -186,6 +186,9 @@ bool is_valid_sql_query(std::vector<Token> tokens)
         if (!validator.is_valid()) {
             return false;
         }
+    }
+    if (std::holds_alternative<state::TableName>(validator.get_state())) {
+        return false;
     }
     return true;
 }

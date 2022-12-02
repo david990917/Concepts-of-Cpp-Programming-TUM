@@ -92,6 +92,8 @@ public:
     /// Moves from one state to the next given the token.
     void handle(Token token);
 
+    State get_state() const { return state_; }
+
 private:
     State state_ = state::Start{};
 };
