@@ -40,7 +40,8 @@ class Token
 {
 public:
     /// TODO: Add all types of token to the variant
-    using token_type = std::variant<token::Select, token::Identifier>;
+    using token_type = std::variant<token::Select, token::Identifier, token::From, token::Comma,
+                                    token::Asterisks, token::Semicolon, token::Identifier>;
 
     // Disallow default construction, this doesn't really make sense, what should be a default
     // token? Maybe Unknown, but we don't have that so just disallow it
