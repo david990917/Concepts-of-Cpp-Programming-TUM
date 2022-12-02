@@ -32,6 +32,8 @@ struct FromClause
 {};
 struct MoreColumns
 {};
+struct TableName
+{};
 /*
  * ... and here
  */
@@ -42,7 +44,9 @@ struct MoreColumns
 /// TODO: Add all the possible states to the variant
 using State =
     std::variant<state::Start, state::Invalid, state::Valid, state::SelectStmt, state::NamedColumn,
-                 state::AllColumns, state::FromClause, state::MoreColumns>;
+                 state::AllColumns, state::FromClause, state::MoreColumns, state::TableName>;
+
+
 
 /// Transition from the `Start` state to the next state depending on the given
 /// token
@@ -62,10 +66,11 @@ using State =
  */
 
 [[nodiscard]] State transition(state::SelectStmt, Token token);
-[[nodiscard]] State transition(state::NamedColumn, Token token);
 [[nodiscard]] State transition(state::AllColumns, Token token);
-[[nodiscard]] State transition(state::FromClause, Token token);
+[[nodiscard]] State transition(state::NamedColumn, Token token);
 [[nodiscard]] State transition(state::MoreColumns, Token token);
+[[nodiscard]] State transition(state::FromClause, Token token);
+[[nodiscard]] State transition(state::TableName, Token token);
 /*
  * ... and here
  */
