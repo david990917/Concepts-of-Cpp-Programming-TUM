@@ -347,6 +347,9 @@ auto Vector::operator/=(float val) -> Vector&
 
 auto Vector::operator+=(const Vector& y) -> Vector&
 {
+    if (this->size() != y.size()) {
+        throw std::invalid_argument("different size");
+    }
     for (auto i = 0; i < this->size(); i++) {
         data_[i] += y[i];
     }
