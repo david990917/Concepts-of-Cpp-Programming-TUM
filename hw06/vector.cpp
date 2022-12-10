@@ -206,7 +206,12 @@ Vector::Vector(std::size_t n, float val)
 {
     data_ = std::vector<float>(n, val);
 }
-
+auto Vector::operator=(float val) -> Vector&
+{
+    for (auto i = 0; i < data_.size(); i++) {
+        data_[i] = val;
+    }
+}
 Vector::Vector(std::initializer_list<float> list)
 {
     for (float tmp : list) {
