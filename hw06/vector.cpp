@@ -293,7 +293,10 @@ auto Vector::operator[](int idx) -> float&
 auto Vector::operator[](int idx) const -> const float&
 {
     std::size_t size = this->size();
-    return data_[idx % size];
+    if (idx < 0) {
+        idx += size;
+    }
+    return data_[idx];
 }
 
 auto Vector::coeff(int idx) -> float&
