@@ -278,7 +278,10 @@ auto Vector::cend() const -> const_iterator
 auto Vector::operator[](int idx) -> float&
 {
     std::size_t size = this->size();
-    return data_[idx % size];
+    if (idx < size) {
+        idx += size;
+    }
+    return data_[idx];
 }
 
 auto Vector::operator[](int idx) const -> const float&
