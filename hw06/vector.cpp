@@ -119,7 +119,11 @@ auto operator+(const Vector& x) -> Vector
 }
 auto operator-(const Vector& x) -> Vector
 {
-    return -x;
+    Vector ans(x.size());
+    for (std::size_t i = 0; i < x.size(); ++i) {
+        ans[i] = -x[i];
+    }
+    return ans;
 }
 auto operator+(const Vector& x, const Vector& y) -> Vector
 {
@@ -278,7 +282,7 @@ auto Vector::cend() const -> const_iterator
 auto Vector::operator[](int idx) -> float&
 {
     std::size_t size = this->size();
-    if (idx < size) {
+    if (idx < 0) {
         idx += size;
     }
     return data_[idx];
