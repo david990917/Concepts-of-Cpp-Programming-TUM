@@ -293,7 +293,7 @@ auto Vector::operator[](int idx) const -> const float&
 auto Vector::coeff(int idx) -> float&
 {
     std::size_t size = this->size();
-    if (std::abs(idx) >= size) {
+    if (idx < 0 || idx >= size) {
         throw std::out_of_range("out_of_range");
     }
     return data_[idx % size];
@@ -302,7 +302,7 @@ auto Vector::coeff(int idx) -> float&
 auto Vector::coeff(int idx) const -> const float&
 {
     std::size_t size = this->size();
-    if (std::abs(idx) >= size) {
+    if (idx < 0 || idx >= size) {
         throw std::out_of_range("out_of_range");
     }
     return data_[idx % size];
