@@ -43,7 +43,7 @@ auto argmax(const Vector& x) -> std::size_t
 
 auto non_zeros(const Vector& x) -> std::size_t
 {
-    return std::count(x.begin(), x.end(), 0);
+    return x.size() - std::count(x.begin(), x.end(), 0);
 }
 auto sum(const Vector& x) -> float
 {
@@ -82,12 +82,12 @@ auto norm(const Vector& x) -> float
 }
 auto normalize(Vector& x) -> void
 {
-    float tmp = norm(x);
+    float tmp = std::sqrt(norm(x));
     x /= tmp;
 }
 auto normalized(const Vector& x) -> Vector
 {
-    float  tmp  = norm(x);
+    float  tmp  = std::sqrt(norm(x));
     size_t size = x.size();
     Vector ans(size);
     for (std::size_t i = 0; i < x.size(); ++i) {
