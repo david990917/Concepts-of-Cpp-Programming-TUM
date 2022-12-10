@@ -100,7 +100,7 @@ auto floor(const Vector& x) -> Vector
     size_t size = x.size();
     Vector ans(size);
     for (auto i = 0; i < size; i++) {
-        ans[i] = ::floor(x[i]);
+        ans[i] = std::floor(x[i]);
     }
     return ans;
 }
