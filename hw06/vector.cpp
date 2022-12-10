@@ -72,22 +72,24 @@ auto dot(const Vector& x, const Vector& y) -> float
     }
     return result;
 }
+
+// Different Defination
 auto norm(const Vector& x) -> float
 {
     float result = 0;
     for (auto i = 0; i < x.size(); i++) {
         result += x[i] * x[i];
     }
-    return result;
+    return std::sqrt(result);
 }
 auto normalize(Vector& x) -> void
 {
-    float tmp = std::sqrt(norm(x));
+    float tmp = norm(x);
     x /= tmp;
 }
 auto normalized(const Vector& x) -> Vector
 {
-    float  tmp  = std::sqrt(norm(x));
+    float  tmp  = norm(x);
     size_t size = x.size();
     Vector ans(size);
     for (std::size_t i = 0; i < x.size(); ++i) {
