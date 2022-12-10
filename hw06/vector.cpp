@@ -211,6 +211,7 @@ auto Vector::operator=(float val) -> Vector&
     for (auto i = 0; i < data_.size(); i++) {
         data_[i] = val;
     }
+    return *this;
 }
 Vector::Vector(std::initializer_list<float> list)
 {
