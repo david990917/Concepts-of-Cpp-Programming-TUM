@@ -15,7 +15,7 @@ std::string_view Video::get_type() const
 size_t Video::get_raw_size() const
 {
     // TODO size of raw 30 FPS RGB color video
-    return 3 * resolution[0] * resolution[1] * int(duration * 30) / 8;
+    return 3 * resolution[0] * resolution[1] * size_t(duration * 30) * 8 / 8;
 }
 
 auto Video::get_resolution() const -> resolution_t
@@ -31,7 +31,7 @@ double Video::get_duration() const
 // TODO content update function
 void Video::update(FileContent&& new_content, resolution_t size, double duration)
 {
-    content    = std::move(new_content);
-    resolution = size;
-    duration   = duration;
+    content        = std::move(new_content);
+    resolution     = size;
+    this->duration = duration;
 }

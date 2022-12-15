@@ -30,6 +30,6 @@ const FileContent& File::get_content() const
 // TODO file constructor
 // XXX - no need for default args again
 File::File(FileContent&& content, std::string_view name)
-    : content(content)
+    : content(std::move(content))
     , name(std::string(name))
 {}

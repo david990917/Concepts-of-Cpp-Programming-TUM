@@ -5,8 +5,9 @@ FileContent::FileContent(const std::string& content)
     : content(content)
 {}
 FileContent::FileContent(std::string&& content)
-    : content(content)
-{}
+{
+    this->content = std::move(content);
+}
 FileContent::FileContent(const char* content)
     : content(content)
 {}

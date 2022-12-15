@@ -75,6 +75,7 @@ protected:
     // TODO additional member variables
     bool                        isRegistered = false;
     std::shared_ptr<Filesystem> filesystem   = nullptr;
+    FileContent                 content;
 
 private:
     /**

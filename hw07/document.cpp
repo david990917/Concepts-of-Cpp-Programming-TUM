@@ -1,4 +1,5 @@
 #include "document.h"
+#include <iostream>
 
 
 Document::Document(FileContent&& content)
@@ -21,7 +22,7 @@ unsigned Document::get_character_count() const
 {
     // TODO count non whitespace characters
     unsigned count = 0;
-    for (const auto& ch : *this->content.get()) {
+    for (auto ch : *content.get()) {
         if (!std::isspace(ch)) ++count;
     }
     return count;
