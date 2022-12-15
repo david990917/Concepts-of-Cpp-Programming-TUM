@@ -8,18 +8,21 @@
  * Derived class for images.
  * Additionally stores the image resolution.
  */
-class Image : public File {
+class Image : public File
+{
 public:
-  using resolution_t = std::array<size_t, 2>;
+    using resolution_t = std::array<size_t, 2>;
 
-  Image(FileContent &&content = {}, resolution_t res = {0, 0});
-  // TODO: more member functions
+    Image(FileContent&& content = {}, resolution_t res = {0, 0});
+    // TODO: more member functions
+    std::string_view get_type() const;
+    size_t           get_raw_size() const;
 
-  resolution_t get_resolution() const;
+    resolution_t get_resolution() const;
 
-  void update(FileContent &&new_content, resolution_t size);
+    void update(FileContent&& new_content, resolution_t size);
 
 protected:
-  resolution_t resolution;
-  bool colored;
+    resolution_t resolution;
+    bool         colored;
 };

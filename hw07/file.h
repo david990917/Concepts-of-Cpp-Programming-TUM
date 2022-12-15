@@ -15,7 +15,8 @@ class Filesystem;
  * Base class for File objects.
  * Keeps track of common properties: name and size
  */
-class File {
+class File
+{
     friend class Filesystem;
 
 public:
@@ -63,8 +64,7 @@ protected:
     /**
      * File construction, only allowed to be called from sub-classes.
      */
-    File(FileContent&& content,
-         std::string_view name="");
+    File(FileContent&& content, std::string_view name = "");
 
     /**
      * Stored real file content.
@@ -73,6 +73,8 @@ protected:
     FileContent content;
 
     // TODO additional member variables
+    bool                        isRegistered = false;
+    std::shared_ptr<Filesystem> filesystem   = nullptr;
 
 private:
     /**
