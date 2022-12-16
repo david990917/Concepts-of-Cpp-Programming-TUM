@@ -10,7 +10,7 @@ Filesystem::Filesystem() {}
 bool Filesystem::register_file(const std::string& name, const std::shared_ptr<File>& file)
 {
     // TODO: Something needs to be done here
-    if (name == "" or file == nullptr) {
+    if (name.size() == 0 or file == nullptr) {
         return false;
     }
 
@@ -22,38 +22,42 @@ bool Filesystem::register_file(const std::string& name, const std::shared_ptr<Fi
     auto thisptr = this->shared_from_this();
 
     // TODO: You need some checks here
-    if (file->filesystem != nullptr) {
+    auto filefs = file->filesystem.lock();
+    if (filefs != nullptr and filefs != thisptr) {
         return false;
     }
-
     file->filesystem = std::move(thisptr);
 
     // TODO: More updates you need to do!
-    files[name] = file;
+    file->name = name;
+    this->files.emplace(name, file);
 
     // TODO register a new file here
-    file->isRegistered = true;
     return true;
 }
 
 bool Filesystem::remove_file(std::string_view name)
 {
     // TODO file removal
-
+    if (name.size() == 0) {
+        return false;
+    }
     // name not exists -> false
-    auto it = files.find(std::string(name));
-    if (it == files.end()) {
+    auto it = this->files.find(std::string(name));
+    if (it == this->files.end()) {
         return false;
     }
 
-    files.erase(it);
+    this->files.erase(it);
     return true;
 }
 
 bool Filesystem::rename_file(std::string_view source, std::string_view dest)
 {
     // TODO file renaming
-
+    if (source.size() == 0 or dest.size() == 0) {
+        return false;
+    }
     // source not exists -> false
     auto it = files.find(std::string(source));
     if (it == files.end()) {
@@ -66,13 +70,18 @@ bool Filesystem::rename_file(std::string_view source, std::string_view dest)
         return false;
     }
 
-    files[std::string(dest)] = files[std::string(source)];
-    files.erase(it);
+    auto file  = std::move(it->second);
+    file->name = dest;
+    this->files.erase(it);
+    this->files.emplace(dest, std::move(file));
     return true;
 }
 
 std::shared_ptr<File> Filesystem::get_file(std::string_view name) const
 {   // TODO
+    if (name.size() == 0) {
+        return nullptr;
+    }
     auto it = files.find(std::string(name));
     if (it == files.end()) {
         return nullptr;

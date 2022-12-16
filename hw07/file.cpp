@@ -9,12 +9,11 @@ size_t File::get_size() const
 
 bool File::rename(std::string_view new_name)
 {
-    // TODO: file renaming
-    if (!isRegistered) {
+    auto fsptr = this->filesystem.lock();
+    if (not fsptr) {
         return false;
     }
-    this->name = new_name;
-    return true;
+    return fsptr->rename_file(this->name, new_name);
 }
 
 const std::string& File::get_name() const

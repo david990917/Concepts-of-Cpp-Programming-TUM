@@ -73,9 +73,7 @@ protected:
     FileContent content;
 
     // TODO additional member variables
-    bool                        isRegistered = false;
-    std::shared_ptr<Filesystem> filesystem   = nullptr;
-    FileContent                 content;
+    std::weak_ptr<Filesystem> filesystem;
 
 private:
     /**

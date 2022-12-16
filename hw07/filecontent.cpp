@@ -2,28 +2,27 @@
 
 // TODO constructors
 FileContent::FileContent(const std::string& content)
-    : content(content)
+    : content{std::make_shared<std::string>(content)}
 {}
 FileContent::FileContent(std::string&& content)
-{
-    this->content = std::move(content);
-}
+    : content{std::make_shared<std::string>(std::move(content))}
+{}
 FileContent::FileContent(const char* content)
-    : content(content)
+    : content{std::make_shared<std::string>(content)}
 {}
 
 // TODO member functions
 /** what's the actual storage size of the file content? */
 size_t FileContent::get_size() const
 {
-    return content.length();
+    return this->content->size();
 }
 
 /** get a read-only handle to the data */
 // XXX: make::shared
 std::shared_ptr<const std::string> FileContent::get() const
 {
-    return std::make_shared<const std::string>(content);
+    return this->content;
 }
 
 // add automatic comparisons
