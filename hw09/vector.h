@@ -63,7 +63,7 @@ public:
     {
         _data     = std::make_unique<T[]>(copy._capacity);
         _capacity = copy._capacity;
-        for (size_t i{0}; i < copy._capacity; i++) {
+        for (size_t i{0}; i < copy._size; i++) {
             _data[i] = copy._data[i];
         }
         _size = copy._size;
@@ -95,7 +95,7 @@ public:
      */
     void push_back(const T& value)
     {
-        size_t new_capacity = calculate_capacity(_capacity + 1);
+        size_t new_capacity = calculate_capacity(_size + 1);
         resize(new_capacity);
         _data[_size++] = value;
     }
@@ -105,7 +105,7 @@ public:
      */
     void push_back(T&& value)
     {
-        size_t new_capacity = calculate_capacity(_capacity + 1);
+        size_t new_capacity = calculate_capacity(_size + 1);
         resize(new_capacity);
         _data[_size++] = std::move(value);
     }
