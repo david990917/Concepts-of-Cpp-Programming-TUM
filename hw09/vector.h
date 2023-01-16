@@ -4,40 +4,86 @@
 #include <ostream>
 #include <stdexcept>
 
-template <typename T>
-class Vector {
+template<typename T> class Vector
+{
 public:
     Vector() = default;
 
     /**
      * Creates a vector of size n with values default_val.
      */
-    Vector(size_t n, const T& default_val) {
+    Vector(size_t n, const T& default_val)
+    {
+        _data     = std::make_unique<T[]>(n);
+        _capacity = n;
+        for (size_t i{0}; i < n; i++) {
+            _data[i] = default_val;
+        }
+        _size = n;
     }
 
     /**
      * Creates a vector containing the elements in l.
      */
-    Vector(std::initializer_list<T> l) {
+    Vector(std::initializer_list<T> l)
+    {
+        _data     = std::make_unique<T[]>(l.size());
+        _capacity = l.size();
+        for (size_t i{0}; T v : l) {
+            _data[i++] = v;
+        }
+        _size = l.size();
     }
 
-    Vector(const Vector& copy) : _size(copy._size), _capacity(copy._capacity) {
+    Vector(const Vector& copy)
+        : _size(copy._size)
+        , _capacity(copy._capacity)
+    {
+        _data = std::make_unique<T[]>(_capacity);
+        for (size_t i{0}; i < _size; i++) {
+            _data[i] = copy._data[i];
+        }
     }
 
-    Vector(Vector&& move) : _size(move._size), _capacity(move._capacity) {
+    Vector(Vector&& move)
+        : _size(move._size)
+        , _capacity(move._capacity)
+    {
+        _data = std::move(move._data);
+        // _data = std::make_unique<T>(_capacity);
+        // for (size_t i{0}; i < _size; i++) {
+        //     _data[i]=move._data[i];
+        // }
     }
 
     /**
      * Replaces the contents of the vector.
      */
-    Vector& operator=(const Vector& copy) {
+    Vector& operator=(const Vector& copy)
+    {
+        _data     = std::make_unique<T[]>(copy._capacity);
+        _capacity = copy._capacity;
+        for (size_t i{0}; i < copy._capacity; i++) {
+            _data[i] = copy._data[i];
+        }
+        _size = copy._size;
+        return *this;
     }
 
 
     /**
      * Replaces the contents of the vector.
      */
-    Vector& operator=(Vector&& move) noexcept {
+    Vector& operator=(Vector&& move) noexcept
+    {
+        // Important: Please Not Ignore
+        if (this == &move) {
+            return *this;
+        }
+        _data     = std::move(move._data);
+        _capacity = move._capacity;
+        _size     = move._size;
+        return *this;
     }
 
     size_t size() const noexcept { return _size; }
@@ -47,54 +93,75 @@ public:
     /**
      * Appends the given element value to the end of the vector.
      */
-    void push_back(const T& value) {
+    void push_back(const T& value)
+    {
+        size_t new_capacity = calculate_capacity(_capacity + 1);
+        resize(new_capacity);
+        _data[_size++] = value;
     }
 
     /**
      * Appends the given element value to the end of the vector.
      */
-    void push_back(T&& value) {
+    void push_back(T&& value)
+    {
+        size_t new_capacity = calculate_capacity(_capacity + 1);
+        resize(new_capacity);
+        _data[_size++] = std::move(value);
     }
 
     /**
      * Removes the last element of the vector.
      */
-    void pop_back() {
+    void pop_back()
+    {
+        _data[_size] = T();
+        _size--;
     }
 
     /**
      * Returns a reference to the element at specified location pos, with bounds checking.
-     * If pos is not within the range of the vector, an exception of type std::out_of_range is thrown.
+     * If pos is not within the range of the vector, an exception of type std::out_of_range is
+     * thrown.
      */
-    T& at(const size_t pos) const {
+    T& at(const size_t pos) const
+    {
+        if (pos >= _size) {
+            throw std::out_of_range("Position out of bounds");
+        }
+        return _data[pos];
     }
 
     /**
      * Returns a reference to the element at specified location pos, with bounds checking.
-     * If pos is not within the range of the vector, an exception of type std::out_of_range is thrown.
+     * If pos is not within the range of the vector, an exception of type std::out_of_range is
+     * thrown.
      */
-    T& at(const size_t pos) {
+    T& at(const size_t pos)
+    {
+        if (pos >= _size) {
+            throw std::out_of_range("Position out of bounds");
+        }
+        return _data[pos];
     }
 
     /**
      * Returns a reference to the element at specified location pos.
      * No bounds checking is performed.
      */
-    T& operator[](const size_t index) const {
-    }
+    T& operator[](const size_t index) const { return _data[index]; }
 
     /**
      * Returns a reference to the element at specified location pos.
      * No bounds checking is performed.
      */
-    T& operator[](const size_t index) {
-    }
+    T& operator[](const size_t index) { return _data[index]; }
 
-    friend std::ostream& operator<<(std::ostream& o, Vector<T> v) {
+    friend std::ostream& operator<<(std::ostream& o, Vector<T> v)
+    {
         o << "Size: " << v._size << ", Capacity: " << v._capacity << std::endl;
         for (size_t i = 0; i < v._size; ++i) {
-            if (i > 0)
-                o << ", ";
+            if (i > 0) o << ", ";
             o << v._data[i];
         }
         o << std::endl;
@@ -116,14 +183,12 @@ private:
      * Calculates the necessary capacity for new_size.
      * If necessary, double `_capacity` using `growth_factor`.
      */
-    size_t calculate_capacity(size_t new_size) {
-    }
+    size_t calculate_capacity(size_t new_size);
 
     /**
-    * Resizes the vector to new_capacity.
-    * If the current capacity is less than new_capacity
-    * the vector moves all elements to a new array.
-    */
-    void resize(size_t new_capacity) {
-    }
+     * Resizes the vector to new_capacity.
+     * If the current capacity is less than new_capacity
+     * the vector moves all elements to a new array.
+     */
+    void resize(size_t new_capacity);
 };
