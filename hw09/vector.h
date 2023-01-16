@@ -113,11 +113,7 @@ public:
     /**
      * Removes the last element of the vector.
      */
-    void pop_back()
-    {
-        _data[_size] = T();
-        _size--;
-    }
+    void pop_back() { _data[--_size] = T(); }
 
     /**
      * Returns a reference to the element at specified location pos, with bounds checking.
