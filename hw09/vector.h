@@ -115,8 +115,10 @@ public:
      */
     void pop_back()
     {
-        _data[_size] = T();
-        _size--;
+        if (_size >= 0) {
+            _data[_size] = T();
+            _size--;
+        }
     }
 
     /**
