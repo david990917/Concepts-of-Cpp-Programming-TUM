@@ -183,12 +183,33 @@ private:
      * Calculates the necessary capacity for new_size.
      * If necessary, double `_capacity` using `growth_factor`.
      */
-    size_t calculate_capacity(size_t new_size);
+    size_t calculate_capacity(size_t new_size)
+    {
+        if (_capacity == 0) {
+            return new_size;
+        }
+        else if (new_size < _capacity) {
+            return _capacity;
+        }
+        return _capacity * growth_factor;
+    }
+
 
     /**
      * Resizes the vector to new_capacity.
      * If the current capacity is less than new_capacity
      * the vector moves all elements to a new array.
      */
-    void resize(size_t new_capacity);
+    void resize(size_t new_capacity)
+    {
+        if (_capacity != new_capacity) {
+            std::unique_ptr<T[]> _tmp = std::make_unique<T[]>(new_capacity);
+            for (size_t i{0}; i < _size; i++) {
+                // std::move instead of `= _data[i]`
+                _tmp[i] = std::move(_data[i]);
+            }
+            _data     = std::move(_tmp);
+            _capacity = new_capacity;
+        }
+    }
 };
