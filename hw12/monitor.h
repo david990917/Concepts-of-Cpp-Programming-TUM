@@ -1,22 +1,25 @@
 #pragma once
 
-#include <chrono>
-#include <unordered_map>
-#include <string>
-#include <filesystem>
-
 #include "logger.h"
+#include <chrono>
+#include <filesystem>
+#include <string>
+#include <unordered_map>
+
+namespace fs = std::filesystem;
+
 
 /**
  * The File Monitor class keeps a record of files in the targetPath and their last modification time
- * Once the monitor has been started, it will continue checking every interval for new, modified and deleted files
- * until it is stopped
+ * Once the monitor has been started, it will continue checking every interval for new, modified and
+ * deleted files until it is stopped
  */
-class FileMonitor {
+class FileMonitor
+{
 public:
-    FileMonitor(const std::string &targetpath,
+    FileMonitor(const std::string&        targetpath,
                 std::chrono::milliseconds interval = std::chrono::milliseconds(1'000),
-                const std::string &logfile = "log.txt");
+                const std::string&        logfile  = "log.txt");
 
     /**
      * Run the monitor.
@@ -26,6 +29,8 @@ public:
     void start(std::chrono::seconds timeout = std::chrono::minutes{1});
 
 private:
-    Logger logger;
-    std::chrono::duration<int, std::milli> interval;
+    std::string                                         targetpath;
+    Logger                                              logger;
+    std::chrono::duration<int, std::milli>              interval;
+    std::unordered_map<std::string, fs::file_time_type> paths;
 };
