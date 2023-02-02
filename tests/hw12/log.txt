@@ -1,3 +1,0 @@
-Commencing logging for directory: TODO: insert current path here..
-Current time is: Thu Feb  2 21:03:56 2023
-
