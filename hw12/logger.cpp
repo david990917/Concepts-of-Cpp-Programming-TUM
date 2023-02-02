@@ -3,6 +3,9 @@
 #include <chrono>
 #include <ctime>
 
+#include <filesystem>
+namespace fs = std::filesystem;
+
 Logger::Logger(const std::string& filename)
     : file{}
 {
