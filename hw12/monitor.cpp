@@ -19,6 +19,7 @@ void FileMonitor::start(std::chrono::seconds timeout)
     bool running = true;
     auto start   = std::chrono::system_clock::now();
     while (running) {
+        std::this_thread::sleep_for(interval);
 
         auto it = paths.begin();
         while (it != paths.end()) {
