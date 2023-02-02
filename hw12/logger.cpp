@@ -22,8 +22,8 @@ Logger::~Logger()
     auto dir         = fs::current_path();
     auto orgfilename = dir / filename;
     if (fs::exists(orgfilename)) {
-        if (fs::exists(orgfilename + "_old")) {
-            fs::remove(orgfilename + "_old");
+        if (fs::exists(orgfilename / "_old")) {
+            fs::remove(orgfilename / "_old");
         }
         fs::rename(orgfilename, orgfilename / "_old");
     }
